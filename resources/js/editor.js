@@ -25,12 +25,21 @@ document.addEventListener("alpine:init", () => {
             `componentFileAttachments.${statePath}`,
             blob,
             (uploadedFilename) => {
-              return resolve({
-                success: 1,
-                file: {
-                  url: uploadedFilename,
-                },
-              });
+              this.$wire
+                .getComponentFileAttachmentUrl(statePath)
+                .then((url) => {
+                  if (!url) {
+                    return resolve({
+                      success: 0,
+                    });
+                  }
+                  return resolve({
+                    success: 1,
+                    file: {
+                      url: url,
+                    },
+                  });
+                });
             }
           );
         });
